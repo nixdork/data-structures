@@ -110,9 +110,15 @@ class Stack<T : Any?> {
 
     private fun normalizeIndex(index: Int): Int =
         when {
-            index > data.size -> data.size
+            index >= data.size -> data.size - 1
             index < 0 -> TOP
-            else -> index
+            else -> {
+                if (data.isEmpty()) {
+                    throw IndexOutOfBoundsException("Index $index doesn't exist in empty Stack")
+                } else {
+                    index
+                }
+            }
         }
 
     internal companion object {
