@@ -1,0 +1,46 @@
+[versions]
+kotlin-core = "1.8.20"
+kotlin-language-level = "1.8"
+jvm-target = "17"
+
+detekt = "1.22.0"
+gradle-analyze = "1.0.9"
+kotest = "5.5.4"
+kotest-extensions-spring = "1.1.2"
+kotest-extensions-testcontainers = "1.3.4"
+kotlin-faker = "1.13.0"
+spotless = "6.14.0"
+task-tree = "2.1.1"
+
+[libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin-core" }
+
+# libraries
+arturbosch-detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
+# test libraries
+kotest-assertions-core-jvm = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotest" }
+kotest-assertions-shared-jvm = { module = "io.kotest:kotest-assertions-shared-jvm", version.ref = "kotest" }
+kotest-extensions-spring = { module = "io.kotest.extensions:kotest-extensions-spring", version.ref = "kotest-extensions-spring" }
+kotest-extensions-testcontainers = { module = "io.kotest.extensions:kotest-extensions-testcontainers", version.ref = "kotest-extensions-testcontainers" }
+kotest-framework-api-jvm = { module = "io.kotest:kotest-framework-api-jvm", version.ref = "kotest" }
+kotest-framework-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+serpro-kotlin-faker = { module = "io.github.serpro69:kotlin-faker", version.ref = "kotlin-faker" }
+
+# plugins as libraries
+kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-core" }
+arturbosch-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
+diffplug-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+faire-gradle-analyze = { module = "com.faire.gradle.analyze:com.faire.gradle.analyze.gradle.plugin", version.ref = "gradle-analyze" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-core" }
+arturbosch-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+faire-gradle-analyze = { id = "com.faire.gradle.analyze", version.ref = "gradle-analyze" }
+task-tree = { id = "com.dorongold.task-tree", version.ref = "task-tree" }
+
+[bundles]
+kotest = ["kotest-assertions-core-jvm", "kotest-assertions-shared-jvm", "kotest-extensions-spring", "kotest-extensions-testcontainers", "kotest-framework-api-jvm", "kotest-framework-datatest", "kotest-property", "kotest-runner-junit5"]

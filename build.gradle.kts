@@ -1,29 +1,27 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.KotlinTopLevelExtension
 
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    kotlin("jvm") version "1.6.21"
-    application
+    `java-library`
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.task.tree)
+    id("local.build")
+    id("local.analysis")
 }
-
-group = "org.nixdork.datastructures"
-version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
 }
 
+logger.lifecycle("> JDK toolchain version: ${java.toolchain.languageVersion.get()}")
+logger.lifecycle("> Kotlin version: ${extensions.findByType<KotlinTopLevelExtension>()?.coreLibrariesVersion}")
+
 dependencies {
-    testImplementation(kotlin("test"))
-}
+    implementation(gradleKotlinDsl())
+    implementation(libs.kotlin.stdlib)
 
-tasks.test {
-    useJUnitPlatform()
-}
+    testImplementation(libs.serpro.kotlin.faker)
+    testImplementation(libs.bundles.kotest)
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-application {
-    mainClass.set("MainKt")
+    detektPlugins(libs.arturbosch.detekt.formatting)
 }
