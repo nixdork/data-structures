@@ -1,5 +1,6 @@
 package org.nixdork.datastructures.stacks
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -142,6 +143,31 @@ class StackSpec : FunSpec({
             stack.peek() shouldNotBeSameInstanceAs item
             stack.peek(2) shouldBeSameInstanceAs item
             popped shouldBeSameInstanceAs item
+        }
+    }
+
+    context("bounds + overflow") {
+        val items = listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+        val stack = Stack(items)
+
+        test("negative index should return top of stack") {
+            stack.peek(-1) shouldBe stack.peek()
+            stack.poke(-1, 10)
+            stack.peek(-1) shouldBe 10
+        }
+
+        test("index larger than size should return bottom of stack") {
+            stack.peek(stack.size + 10) shouldBe stack.peek(stack.size)
+            stack.poke(stack.size + 10, 20)
+            stack.peek(stack.size) shouldBe 20
+        }
+
+        test("index into an empty stack should throw") {
+            stack.clear()
+            stack.isEmpty() shouldBe true
+            stack.peek() shouldBe null
+            shouldThrow<IndexOutOfBoundsException> { stack.poke(10) }
+            stack.isEmpty() shouldBe true
         }
     }
 })
