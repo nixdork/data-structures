@@ -82,6 +82,9 @@ class Stack<T : Any?> {
      */
     fun dump() = data
 
+    /**
+     * clears the stack
+     */
     fun clear() {
         data = emptyData
         size = data.size

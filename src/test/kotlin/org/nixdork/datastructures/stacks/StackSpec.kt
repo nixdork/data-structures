@@ -162,7 +162,7 @@ class StackSpec : FunSpec({
             stack.peek(stack.size) shouldBe 20
         }
 
-        test("index into an empty stack should throw") {
+        test("index into an empty stack should be null or throw on poke") {
             stack.clear()
             stack.isEmpty() shouldBe true
             stack.peek() shouldBe null
