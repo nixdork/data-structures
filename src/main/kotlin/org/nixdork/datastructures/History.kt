@@ -143,7 +143,7 @@ class History<T : Any?> {
             listOf(
                 b.joinToString(ARRAY_SEP, ARRAY_PREFIX, ARRAY_POSTFIX),
                 cur,
-                fwd.toString()
+                fwd.toString(),
             ).joinToString(HIST_SEP, HIST_PREFIX, HIST_POSTFIX)
         }
 

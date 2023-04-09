@@ -49,7 +49,7 @@ class StackSpec : FunSpec({
         }
 
         test("poke with index changes item at index") {
-            stack.poke(3,27)
+            stack.poke(3, 27)
             stack.peek() shouldBe 13
             stack.peek(3) shouldBe 27
         }
@@ -130,8 +130,8 @@ class StackSpec : FunSpec({
                     1,
                     1,
                     1,
-                    ZoneOffset.UTC
-                )
+                    ZoneOffset.UTC,
+                ),
             )
 
             stack.peek() shouldNotBeSameInstanceAs item
