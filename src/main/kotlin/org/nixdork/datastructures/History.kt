@@ -2,16 +2,11 @@ package org.nixdork.datastructures
 
 import org.nixdork.datastructures.stacks.Stack
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "TooManyFunctions")
 class History<T : Any?> {
-    @PublishedApi
-    internal var fwd: Stack<T?>
-
-    @PublishedApi
-    internal var bwd: Stack<T?>
-
-    @PublishedApi
-    internal var cur: T?
+    var fwd: Stack<T?>
+    var bwd: Stack<T?>
+    var cur: T?
 
     init {
         fwd = Stack()
@@ -113,7 +108,7 @@ class History<T : Any?> {
      * Chrono order means LIFO
      * @return An array of history items
      */
-    inline fun <reified T> dump(): Array<T> =
+    fun dump(): Array<Any?> =
         mutableListOf<T>().also { l ->
             if (canMoveForward) l.addAll(fwd.dump().reversed() as Collection<T>)
             if (cur != null) l.add(cur as T)

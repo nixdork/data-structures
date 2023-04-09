@@ -58,9 +58,9 @@ class HistorySpec : FunSpec({
         test("dump returns history as an array") {
             history.previous()
             history.visit(7)
-            val dumped = history.dump<Int>()
+            val dumped = history.dump()
             dumped shouldBe listOf(1, 2, 3, 4, 5, 7).reversed().toTypedArray()
-            dumped.shouldBeInstanceOf<Array<Int>>()
+            dumped.shouldBeInstanceOf<Array<Any?>>()
         }
 
         test("clear should empty the history") {
