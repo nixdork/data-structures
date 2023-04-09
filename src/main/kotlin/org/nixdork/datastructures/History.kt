@@ -4,15 +4,24 @@ import org.nixdork.datastructures.stacks.Stack
 
 @Suppress("UNCHECKED_CAST")
 class History<T : Any?> {
-    private var fwd: Stack<T?>
-    private var bwd: Stack<T?>
-    private var cur: T?
+    @PublishedApi
+    internal var fwd: Stack<T?>
+
+    @PublishedApi
+    internal var bwd: Stack<T?>
+
+    @PublishedApi
+    internal var cur: T?
 
     init {
         fwd = Stack()
         bwd = Stack()
         cur = null
+        setSize()
     }
+
+    var size: Int = 0
+        private set
 
     /**
      * Tells if the current pointer can be moved forward in history.
@@ -27,24 +36,31 @@ class History<T : Any?> {
         get() = bwd.size > 0
 
     /**
-     * Returns the current item in the history. Pushes the state of the
-     * current pointer into the backward stack and sets the new current
-     * item. If the forward stack has items in it then clear that too.
-     * @param value An item of type T
+     * Returns the current item in the history.
      */
-    var current: T?
+    var current: T? = null
         get() = cur
-        set(value) {
-            if (this.canMoveForward) {
-                fwd.clear()
-            }
+        private set
 
-            if (cur != null) {
-                bwd.push(cur)
-            }
+    /**
+     * Pushes the state of the current pointer into the backward stack
+     * and sets the new current item. If the forward stack has items in
+     * it then clear that too and set the size.
+     */
+    fun visit(item: T): T {
+        if (canMoveForward) fwd.clear()
+        if (cur != null) bwd.push(cur)
+        cur = item
+        setSize()
+        return cur!!
+    }
 
-            cur = value
-        }
+    /**
+     * visits several items
+     */
+    fun visit(items: Collection<T>): T =
+        items.forEach { item -> visit(item) }
+            .let { cur!! }
 
     /**
      * Moves the current pointer one item forward in history
@@ -59,6 +75,17 @@ class History<T : Any?> {
     }
 
     /**
+     * Moves the current pointer `steps` items forward in history
+     * @return The new current item
+     */
+    fun next(steps: Int): T? =
+        (1..steps).forEach {
+            next()
+        }.let {
+            cur
+        }
+
+    /**
      * Moves the current pointer one item back in history
      * @return The new current item
      */
@@ -71,16 +98,42 @@ class History<T : Any?> {
     }
 
     /**
-     * Dumps the entire history in chronological order to a List of T
-     * Chrono order means LIFO
-     * @return An ordered list of history items
+     * Moves the current pointer `steps` items back in history
+     * @return The new current item
      */
-    fun dump(): List<T> =
+    fun previous(steps: Int): T? =
+        (1..steps).forEach {
+            previous()
+        }.let {
+            cur
+        }
+
+    /**
+     * Dumps the entire history in chronological order to an Array
+     * Chrono order means LIFO
+     * @return An array of history items
+     */
+    inline fun <reified T> dump(): Array<T> =
         mutableListOf<T>().also { l ->
             if (canMoveForward) l.addAll(fwd.dump().reversed() as Collection<T>)
-            if (cur != null) l.add(cur!!)
+            if (cur != null) l.add(cur as T)
             if (canMoveBackward) l.addAll(bwd.dump().toList() as Collection<T>)
-        }
+        }.toTypedArray()
+
+    /**
+     * clears the history
+     */
+    fun clear() {
+        fwd.clear()
+        bwd.clear()
+        cur = null
+        size = 0
+    }
+
+    /**
+     * return true if the history is empty
+     */
+    fun isEmpty() = size == 0
 
     /**
      * return the history as a string
@@ -88,9 +141,22 @@ class History<T : Any?> {
     override fun toString(): String =
         bwd.dump().reversedArray().let { b ->
             listOf(
-                b.joinToString(", ", "[", "]"),
+                b.joinToString(ARRAY_SEP, ARRAY_PREFIX, ARRAY_POSTFIX),
                 cur,
                 fwd.toString()
-            ).joinToString(", ", "{", "}")
+            ).joinToString(HIST_SEP, HIST_PREFIX, HIST_POSTFIX)
         }
+
+    private fun setSize() {
+        size = bwd.size + fwd.size + if (cur == null) 0 else 1
+    }
+
+    companion object {
+        private const val ARRAY_SEP = ", "
+        private const val ARRAY_PREFIX = "["
+        private const val ARRAY_POSTFIX = "]"
+        private const val HIST_SEP = ",\n  "
+        private const val HIST_PREFIX = "{\n  "
+        private const val HIST_POSTFIX = "\n}"
+    }
 }
